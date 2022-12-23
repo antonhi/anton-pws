@@ -1,0 +1,16 @@
+{
+  "name": "anton-pws",
+  "version": "0.0.0",
+  "description": "Example SDK for Autodesk PWS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepublish": "tsc"
+  },
+  "keywords": [],
+  "author": "Anton Horvath",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^2.7.2"
+  }
+}
