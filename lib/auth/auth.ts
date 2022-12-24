@@ -22,7 +22,7 @@ export function Auth(consumerKey: string, consumerSecret: string) {
             axios.post('https://'+ environmentUrl +'/v2/oauth/generateaccesstoken?grant_type=client_credentials', 
             null, axiosConfig)
             .then((res) => {
-                accessToken = res.data.accessToken;
+                accessToken = res.data.access_token;
                 lastRun = Date.now();
                 return accessToken;
             })

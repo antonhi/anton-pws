@@ -1,6 +1,6 @@
 {
   "name": "anton-pws",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Example SDK for Autodesk PWS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
