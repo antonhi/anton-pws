@@ -1,11 +1,23 @@
 import { InitialOrder } from "./models/orders";
+import { Account, Contact } from "./models/accounts";
+import { InitialProduct } from "./models/products";
+import { Discount } from "./models/discounts";
+import { OrderVersionManager } from "./lib/ordering/versions";
 
-function pws(consumerKey : string, consumerSecret : string, csn : string) {
-    let order : InitialOrder
-    console.log('initialized');
+function PWS(consumerKey : string, consumerSecret : string, csn : string) {
+
+    const orders = OrderVersionManager(consumerKey, consumerSecret, csn);
+
+    return {
+        orders
+    };
 }
 
 export {
     InitialOrder,
-    pws
+    Account,
+    Contact,
+    InitialProduct,
+    Discount,
+    PWS
 }
