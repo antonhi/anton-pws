@@ -19,17 +19,16 @@ export function Auth(consumerKey: string, consumerSecret: string) {
                 }
             };
 
-            axios.post('https://'+ environmentUrl +'/v2/oauth/generateaccesstoken?grant_type=client_credentials', 
-            null, axiosConfig)
-            .then((res) => {
-                accessToken = res.data.access_token;
+            try {
+                const response = await axios.post('https://'+ environmentUrl +'/v2/oauth/generateaccesstoken?grant_type=client_credentials', 
+                null, axiosConfig);
+                accessToken = response.data.access_token;
                 lastRun = Date.now();
                 return accessToken;
-            })
-            .catch((error) => {
-                console.log(error);
+            } catch (e) {
+                console.log(e);
                 return '';
-            });
+            }
         } else {
             return accessToken;
         }
