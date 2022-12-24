@@ -12,5 +12,11 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "@types/crypto-js": "^4.1.1",
+    "@types/node": "^18.11.17",
+    "axios": "^1.2.1",
+    "crypto-js": "^4.1.1"
   }
 }
