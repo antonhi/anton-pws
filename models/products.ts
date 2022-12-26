@@ -1,5 +1,5 @@
 export type InitialProduct = {
     partNumber: string
-    partnerSubscriptionId: string
+    partnerSubscriptionId: string | null
     quantity: number
 }

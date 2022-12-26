@@ -11,11 +11,11 @@ export type InitialOrder = {
     shipTo: Account
     reseller: string
     soldTo: string
-    governmentEntity: string
+    governmentEntity: string | null
     poNumber: string
-    customerPoNumber: string
-    contractStartDate: string
-    priceDate: string
+    customerPoNumber: string | null
+    contractStartDate: string | null
+    priceDate: string | null
     items: Array<InitialProduct>
     discounts: Array<Discount>
 }

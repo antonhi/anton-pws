@@ -1,21 +1,21 @@
 export type Account = {
-    csn: string,
-    name: string,
-    altName: string,
-    addressLine1: string,
-    addressLine2: string,
-    addressLine3: string,
-    city: string,
-    postalCode: string,
-    stateProvinceCode: string,
-    countryCode: string,
-    phoneNumber: string
+    csn: string | null,
+    name: string | null,
+    altName: string | null,
+    addressLine1: string | null,
+    addressLine2: string | null,
+    addressLine3: string | null,
+    city: string | null,
+    postalCode: string | null,
+    stateProvinceCode: string | null,
+    countryCode: string | null,
+    phoneNumber: string | null
 }
 
 export type Contact = {
     firstName: string,
     lastName: string,
     email: string,
-    countryCode: string,
-    language: string
+    countryCode: string | null,
+    language: string | null
 }
