@@ -77,6 +77,8 @@ export function Fulfillment(auth: AuthService) {
     }
 
     return {
-        placeInitialOrder
+        placeInitialOrder,
+        getCurrentDate,
+        getPrice
     };
 }
