@@ -8,7 +8,7 @@ export function Auth(consumerKey: string, consumerSecret: string, csn: string) {
     function getCSN() { return csn; }
 
     async function getHeader(callbackUrl: string, environmentUrl: string) : Promise<AxiosRequestConfig> {
-        if (!state.get(callbackUrl+environmentUrl) || getMinutesElapsed(state.get(callbackUrl+environmentUrl)?.lastRun || 0) >= 15) {
+        if (!state.get(callbackUrl+environmentUrl) || getMinutesElapsed(state.get(callbackUrl+environmentUrl)?.timestamp || 0) >= 15) {
             await refresh(callbackUrl, environmentUrl);
         }
         return {
@@ -37,12 +37,11 @@ export function Auth(consumerKey: string, consumerSecret: string, csn: string) {
         };
 
         try {
-            await axios.post('https://'+ environmentUrl +'/v2/oauth/generateaccesstoken?grant_type=client_credentials', null, axiosConfig);
+            const response = await axios.post('https://'+ environmentUrl +'/v2/oauth/generateaccesstoken?grant_type=client_credentials', null, axiosConfig);
             state.set(callbackUrl+environmentUrl, {
-                lastRun: Date.now(),
                 timestamp: timestamp,
-                signature: signature,
-                auth: auth
+                signature: getSig(callbackUrl, response.data.access_token, timestamp),
+                auth: 'Bearer: ' + response.data.access_token
             })
         } catch (e) {
             console.log(e);
@@ -55,11 +54,17 @@ export function Auth(consumerKey: string, consumerSecret: string, csn: string) {
     }
 
     function getTimestamp() {
-        return Date.now()/1000 | 0;
+        return Date.now() | 0;
     }
 
     function getSignature(callbackUrl: string, timestamp: number) {
         const message = callbackUrl + consumerKey + timestamp;
+        const hash = HmacSHA256(message, consumerSecret);
+        return enc.Base64.stringify(hash);
+    }
+
+    function getSig(callbackUrl: string, accessToken: string, timestamp: number) {
+        const message = callbackUrl + accessToken + timestamp;
         const hash = HmacSHA256(message, consumerSecret);
         return enc.Base64.stringify(hash);
     }

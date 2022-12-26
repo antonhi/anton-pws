@@ -1,7 +1,6 @@
 import { AxiosRequestConfig } from "axios"
 
 export type AuthInfo = {
-    lastRun: number
     timestamp: number
     signature: string
     auth : string
