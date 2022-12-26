@@ -16,6 +16,6 @@ export type InitialOrder = {
     customerPoNumber: string
     contractStartDate: string
     priceDate: string
-    items: [InitialProduct]
-    discounts: [Discount]
+    items: Array<InitialProduct>
+    discounts: Array<Discount>
 }

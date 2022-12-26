@@ -1,41 +1,57 @@
 import { enc, HmacSHA256 } from "crypto-js";
 import axios, { AxiosRequestConfig } from 'axios';
+import { AuthInfo } from "../../models/auth";
 
-export function Auth(consumerKey: string, consumerSecret: string) {
-    let lastRun = -1;
-    let accessToken: string
+export function Auth(consumerKey: string, consumerSecret: string, csn: string) {
+    const state = new Map<string, AuthInfo>();
 
-    async function getAccessToken(callbackUrl: string, environmentUrl: string) {
-        if (lastRun < 0 || getMinutesElapsed() >= 15) {
-            const timestamp = getTimestamp();
-            const signature = getSignature(callbackUrl, timestamp);
-            const auth = getAuth();
+    function getCSN() { return csn; }
 
-            const axiosConfig : AxiosRequestConfig = {
+    async function getHeader(callbackUrl: string, environmentUrl: string) : Promise<AxiosRequestConfig> {
+        if (!state.get(callbackUrl+environmentUrl) || getMinutesElapsed(state.get(callbackUrl+environmentUrl)?.lastRun || 0) >= 15) {
+            await refresh(callbackUrl, environmentUrl);
+        }
+        return {
+            headers: {
+                'signature': state.get(callbackUrl+environmentUrl)?.signature,
+                'timestamp': state.get(callbackUrl+environmentUrl)?.timestamp,
+                'Authorization': state.get(callbackUrl+environmentUrl)?.auth,
+                'Content-Type': 'application/json',
+                'CSN': csn 
+            }
+        }
+
+    }
+
+    async function refresh(callbackUrl: string, environmentUrl: string) {
+        const  timestamp = getTimestamp();
+        const signature = getSignature(callbackUrl, timestamp);
+        const auth = getAuth();
+
+        const axiosConfig : AxiosRequestConfig = {
                 headers: {
                     'signature': signature,
                     'timestamp': timestamp,
                     'Authorization': auth
                 }
-            };
+        };
 
-            try {
-                const response = await axios.post('https://'+ environmentUrl +'/v2/oauth/generateaccesstoken?grant_type=client_credentials', 
-                null, axiosConfig);
-                accessToken = response.data.access_token;
-                lastRun = Date.now();
-                return accessToken;
-            } catch (e) {
-                console.log(e);
-                return '';
-            }
-        } else {
-            return accessToken;
+        try {
+            await axios.post('https://'+ environmentUrl +'/v2/oauth/generateaccesstoken?grant_type=client_credentials', null, axiosConfig);
+            state.set(callbackUrl+environmentUrl, {
+                lastRun: Date.now(),
+                timestamp: timestamp,
+                signature: signature,
+                auth: auth
+            })
+        } catch (e) {
+            console.log(e);
+            return '';
         }
     }
 
-    function getMinutesElapsed() {
-        return (Date.now()-lastRun)/1000/60;
+    function getMinutesElapsed(time: number) {
+        return (Date.now()-time)/1000/60;
     }
 
     function getTimestamp() {
@@ -53,6 +69,7 @@ export function Auth(consumerKey: string, consumerSecret: string) {
         return 'Basic ' + Buffer.from(passwordSignature).toString('base64');
     }
     return {
-        getAccessToken
-    };
+        getCSN,
+        getHeader
+    }
 }

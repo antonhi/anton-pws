@@ -1,7 +1,8 @@
+import { AuthService } from "../../models/auth";
 import { Orders } from "./v1/v1";
 
-export function OrderVersionManager(consumerKey : string, consumerSecret: string, csn: string) {
-    const v1 = Orders(consumerKey, consumerSecret, csn);
+export function OrderVersionManager(auth: AuthService) {
+    const v1 = Orders(auth);
     return {
         v1
     };

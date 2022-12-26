@@ -7,8 +7,8 @@ import { Auth } from "./lib/auth/auth";
 
 function PWS(consumerKey : string, consumerSecret : string, csn : string) {
 
-    const auth = Auth(consumerKey, consumerSecret);
-    const orders = OrderVersionManager(consumerKey, consumerSecret, csn);
+    const auth = Auth(consumerKey, consumerSecret, csn);
+    const orders = OrderVersionManager(auth);
 
     return {
         auth,

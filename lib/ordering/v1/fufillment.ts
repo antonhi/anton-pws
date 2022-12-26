@@ -1,16 +1,82 @@
+import axios from 'axios';
+import { AuthService } from '../../../models/auth';
 import { InitialOrder } from "../../../models/orders";
+import { InitialProduct } from '../../../models/products';
 
-export function Fulfillment(consumerKey : string, consumerSecret: string, csn: string) {
+export function Fulfillment(auth: AuthService) {
 
-    function placeInitialOrder(order: InitialOrder) {
-        
+    async function placeInitialOrder(order: InitialOrder, callbackUrl: string, environmentUrl: string) {
+        try {
+            const authentication = await auth.getHeader(callbackUrl, environmentUrl);
+            const response = await axios.post('https://'+ environmentUrl +'/v2/orders/fulfillment', getInitialOrderBody(order, callbackUrl, environmentUrl), authentication);
+            return response;
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
     }
 
-    function printCSN() {
-        console.log(csn);
+    function getInitialOrderBody(order: InitialOrder, callbackUrl: string, environmentUrl: string) {
+        return {
+            action: 'Initial',
+            endCustomer: {
+                account: order.endCustomerAccount,
+                contractManager: order.endCustomerContractManager,
+            },
+            shipTo: order.shipTo,
+            reseller: {
+                csn: order.reseller
+            },
+            soldTo: {
+                csn: order.soldTo
+            },
+            governmentEntity: !order.governmentEntity ? null : {
+                csn: order.governmentEntity
+            },
+            poNumber: order.poNumber,
+            customerPoNumber: order.customerPoNumber,
+            contractStartDate: order.contractStartDate,
+            priceDate: order.priceDate,
+            lineItems: getLineItems(order.items, order.contractStartDate || getCurrentDate(), callbackUrl, environmentUrl),
+            orderDiscounts: order.discounts
+        }
+    }
+
+    async function getLineItems(items : Array<InitialProduct>, startDate: string, callbackUrl: string, environmentUrl: string) {
+        const lineItems = [];
+        for (let item of items) {
+            lineItems.push({
+                partNumber: item.partNumber,
+                partnerSubscriptionId: item.partnerSubscriptionId,
+                quantity: item.quantity,
+                netPrice: await getPrice(item.partNumber, item.quantity, startDate, callbackUrl, environmentUrl)
+            });
+        }
+        return lineItems;
+    }
+
+    async function getPrice(partNumber: string, quantity: number, startDate: string, callbackUrl: string, environmentUrl: string) {
+        console.log('getting price');
+        try {
+            const authentication = await auth.getHeader(callbackUrl, environmentUrl);
+            const response = await axios.get('https://'+ environmentUrl +`/v1/sku/prices?customer_number=${auth.getCSN()}&part_number=${partNumber}&price_date=${startDate}&quantity=${quantity}`, authentication);
+            console.log(response.data.response.net_price);
+            return response.data.response.net_price;
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    }
+
+    function getCurrentDate() {
+        const date = new Date();
+        let day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate();
+        let month = date.getMonth() + 1 < 10 ? '0'+(date.getMonth() + 1) : date.getMonth() + 1;
+        let year = date.getFullYear();
+        return `${year}-${month}-${day}`;
     }
 
     return {
-        printCSN
+        placeInitialOrder
     };
 }
