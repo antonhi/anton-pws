@@ -2,47 +2,47 @@ export type Account = {
     /**
      * Account csn
      */
-    csn: string | null,
+    csn?: string,
     /**
      * Name for account (Mandatory if csn is not provided, ignored otherwise)
      */
-    name: string | null,
+    name?: string,
     /**
      * Alternate name for account (Optional if csn is not provided, ignored otherwise)
      */
-    altName: string | null,
+    altName?: string,
     /**
      * Address for account (Mandatory if csn is not provided, ignored otherwise)
      */
-    addressLine1: string | null,
+    addressLine1?: string,
     /**
      * Address Line 2 for account (Optional if csn is not provided, ignored otherwise)
      */
-    addressLine2?: string | null,
+    addressLine2?: string,
     /**
      * Address Line 3 for account (Optional if csn is not provided, ignored otherwise)
      */
-    addressLine3: string | null,
+    addressLine3?: string,
     /**
      * City of address for account (Mandatory if csn is not provided, ignored otherwise)
      */
-    city: string | null,
+    city?: string,
     /**
      * Postal code of address for account (Mandatory if csn is not provided, ignored otherwise)
      */
-    postalCode: string | null,
+    postalCode?: string,
     /**
      * State or province code of address for account (Mandatory if csn is not provided, ignored otherwise)
      */
-    stateProvinceCode: string | null,
+    stateProvinceCode?: string,
     /**
      * Country code of address for account (Optional if csn is not provided, ignored otherwise)
      */
-    countryCode: string | null,
+    countryCode?: string,
     /**
      * Phone number of account (Optional if csn is not provided, ignored otherwise)
      */
-    phoneNumber: string | null
+    phoneNumber?: string
 }
 
 export type Contact = {
@@ -61,9 +61,9 @@ export type Contact = {
     /**
      * Country of the contact (Optional)
      */
-    countryCode: string | null,
+    countryCode?: string,
     /**
      * Language of the contact (Optional)
      */
-    language: string | null
+    language?: string
 }

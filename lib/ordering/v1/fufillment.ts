@@ -9,19 +9,18 @@ export function Fulfillment(auth: AuthService) {
         try {
             const authentication = await auth.getHeader(callbackUrl, environmentUrl);
             const response = await axios.post('https://'+ environmentUrl +'/v2/orders/fulfillment', await getInitialOrderBody(order, callbackUrl, environmentUrl), authentication);
-            return {
+            return response.data.error ? {
                 transactionId: response.data.transactionId,
                 status: response.data.status,
                 error: response.data.error
-            };
+            } : {
+                transactionId: response.data.transactionId,
+                status: response.data.status
+            }
         } catch (_) {
             return {
                 transactionId: '',
-                status: 'error',
-                error: {
-                    code: 'n/a',
-                    message: 'n/a'
-                }
+                status: 'error'
             };
         }
     }
