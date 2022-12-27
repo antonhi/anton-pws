@@ -1,8 +1,8 @@
 # anton-pws
-Example TypeScript SDK for Autodesk PWS.
+Example NodeJS SDK for Autodesk PWS.
 
 ## Installation
-Navigate to your NodeJS application in a terminal and run `npm install anton-pws@0.2.1`
+Navigate to your NodeJS application in a terminal and run `npm i anton-pws@1.0.0`
 
 ## Initializing the Client
 1. Obtain your credentials from the [Partner Developer Portal](https://partner.developer.autodesk.com). This includes your:
@@ -31,70 +31,70 @@ const status = await client.orders.v1.status.get(transactionId, callbackUrl, env
 
 ## Models
 
-An `InitialOrder` has the following JSON structure:
+An `InitialOrder` has the following JSON structure ('?' denotes optional property):
 
 ```json
 {
-    endCustomerAccount: Account,
-    endCustomerContractManager: Contact,
-    shipTo: Account,
-    reseller: string,
-    soldTo: string,
-    governmentEntity?: string,
-    poNumber: string,
-    customerPoNumber?: string,
-    contractStartDate?: string,
-    priceDate?: string,
-    items: Array<InitialProduct>,
-    discounts?: Array<Discount>
+    "endCustomerAccount": Account,
+    "endCustomerContractManager": Contact,
+    "shipTo": Account,
+    "reseller": string,
+    "soldTo": string,
+    "governmentEntity": string?,
+    "poNumber": string,
+    "customerPoNumber": string?,
+    "contractStartDate": string?,
+    "priceDate": string?,
+    "items": Array<InitialProduct>,
+    "discounts": Array<Discount>?
 }
 ```
 
-An `Account` has the following JSON structure:
+An `Account` has the following JSON structure ('?' denotes optional property):
 
 ```json
 {
-    csn?: string,
-    name?: string,
-    altName?: string,
-    addressLine1?: string,
-    addressLine2?: string,
-    addressLine3?: string,
-    city?: string,
-    postalCode?: string,
-    stateProvinceCode?: string,
-    countryCode?: string,
-    phoneNumber?: string
+    "csn": string?,
+    "name": string?,
+    "altName": string?,
+    "addressLine1": string?,
+    "addressLine2": string?,
+    "addressLine3": string?,
+    "city": string?,
+    "postalCode": string?,
+    "stateProvinceCode": string?,
+    "countryCode": string?,
+    "phoneNumber": string?
 }
 ```
 
-A `Contact` has the following JSON structure:
+A `Contact` has the following JSON structure ('?' denotes optional property):
 
 ```json
 {
-    firstName: string,
-    lastName: string,
-    email: string,
-    countryCode?: string,
-    language?: string
+    "firstName": string,
+    "lastName": string,
+    "email": string,
+    "countryCode": string?,
+    "language": string?
 }
 ```
 
-An `InitialProduct` has the following JSON structure:
+An `InitialProduct` has the following JSON structure ('?' denotes optional property):
 
 ```json
 {
-    partNumber: string,
-    partnerSubscriptionId?: string,
-    quantity: number
+    "partNumber": string,
+    "partnerSubscriptionId": string?,
+    "quantity": number
 }
 ```
 
-A `Discount` has the following JSON structure:
+A `Discount` has the following JSON structure ('?' denotes optional property):
 
 ```json
 {
-    discountId: string
-    discountType: DiscountType
+    "discountId": string,
+    "discountType": DiscountType
 }
 ```
