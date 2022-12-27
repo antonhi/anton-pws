@@ -19,3 +19,12 @@ export type InitialOrder = {
     items: Array<InitialProduct>
     discounts: Array<Discount>
 }
+
+export type InitialOrderResponse = {
+    transactionId: string,
+    status: string,
+    error: {
+        code: string,
+        message: string
+    } | null
+}

@@ -24,7 +24,7 @@ export function Auth(consumerKey: string, consumerSecret: string, csn: string) {
     }
 
     async function refresh(callbackUrl: string, environmentUrl: string) {
-        const  timestamp = getTimestamp();
+        const timestamp = getTimestamp();
         const signature = getSignature(callbackUrl, timestamp);
         const auth = getAuth();
 
@@ -41,8 +41,8 @@ export function Auth(consumerKey: string, consumerSecret: string, csn: string) {
             state.set(callbackUrl+environmentUrl, {
                 timestamp: timestamp,
                 signature: getSig(callbackUrl, response.data.access_token, timestamp),
-                auth: 'Bearer: ' + response.data.access_token
-            })
+                auth: 'Bearer ' + response.data.access_token
+            });
         } catch (e) {
             console.log(e);
             return '';
@@ -50,11 +50,11 @@ export function Auth(consumerKey: string, consumerSecret: string, csn: string) {
     }
 
     function getMinutesElapsed(time: number) {
-        return (Date.now()-time)/1000/60;
+        return (Date.now()/1000-time)/60;
     }
 
     function getTimestamp() {
-        return Date.now() | 0;
+        return Date.now()/1000 | 0;
     }
 
     function getSignature(callbackUrl: string, timestamp: number) {

@@ -1,22 +1,32 @@
 import axios from 'axios';
 import { AuthService } from '../../../models/auth';
-import { InitialOrder } from "../../../models/orders";
+import { InitialOrder, InitialOrderResponse } from "../../../models/orders";
 import { InitialProduct } from '../../../models/products';
 
 export function Fulfillment(auth: AuthService) {
 
-    async function placeInitialOrder(order: InitialOrder, callbackUrl: string, environmentUrl: string) {
+    async function placeInitialOrder(order: InitialOrder, callbackUrl: string, environmentUrl: string) : Promise<InitialOrderResponse> {
         try {
             const authentication = await auth.getHeader(callbackUrl, environmentUrl);
-            const response = await axios.post('https://'+ environmentUrl +'/v2/orders/fulfillment', getInitialOrderBody(order, callbackUrl, environmentUrl), authentication);
-            return response;
-        } catch (e) {
-            console.log(e);
-            return null;
+            const response = await axios.post('https://'+ environmentUrl +'/v2/orders/fulfillment', await getInitialOrderBody(order, callbackUrl, environmentUrl), authentication);
+            return {
+                transactionId: response.data.transactionId,
+                status: response.data.status,
+                error: response.data.error
+            };
+        } catch (_) {
+            return {
+                transactionId: '',
+                status: 'error',
+                error: {
+                    code: 'n/a',
+                    message: 'n/a'
+                }
+            };
         }
     }
 
-    function getInitialOrderBody(order: InitialOrder, callbackUrl: string, environmentUrl: string) {
+    async function getInitialOrderBody(order: InitialOrder, callbackUrl: string, environmentUrl: string) {
         return {
             action: 'Initial',
             endCustomer: {
@@ -37,12 +47,13 @@ export function Fulfillment(auth: AuthService) {
             customerPoNumber: order.customerPoNumber,
             contractStartDate: order.contractStartDate,
             priceDate: order.priceDate,
-            lineItems: getLineItems(order.items, order.contractStartDate || getCurrentDate(), callbackUrl, environmentUrl),
+            lineItems: await getLineItems(order.items, order.contractStartDate || getCurrentDate(), callbackUrl, environmentUrl),
             orderDiscounts: order.discounts
         }
     }
 
     async function getLineItems(items : Array<InitialProduct>, startDate: string, callbackUrl: string, environmentUrl: string) {
+        console.log('Getting line items');
         const lineItems = [];
         for (let item of items) {
             lineItems.push({
@@ -52,16 +63,15 @@ export function Fulfillment(auth: AuthService) {
                 netPrice: await getPrice(item.partNumber, item.quantity, startDate, callbackUrl, environmentUrl)
             });
         }
+        console.log('Line Items: ' + lineItems.toString());
         return lineItems;
     }
 
     async function getPrice(partNumber: string, quantity: number, startDate: string, callbackUrl: string, environmentUrl: string) {
-        console.log('getting price');
         try {
             const authentication = await auth.getHeader(callbackUrl, environmentUrl);
             const response = await axios.get('https://'+ environmentUrl +`/v1/sku/prices?customer_number=${auth.getCSN()}&part_number=${partNumber}&price_date=${startDate}&quantity=${quantity}`, authentication);
-            console.log(response.data.response.net_price);
-            return response.data.response.net_price;
+            return response.data.response.net_price+'';
         } catch (e) {
             console.log(e);
             return null;
