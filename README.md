@@ -19,12 +19,16 @@ You can use the `fulfillment` module to place an initial order:
 const order = await client.orders.v1.fulfillment.placeInitialOrder(InitialOrder, callbackUrl, environmentUrl);
 ```
 
+API reference documentation can be found [here](https://partner.developer.autodesk.com/contents/files/api-reference-manuals/en/pws-placeorder-v2-service-reference-manual.pdf?ts=1669225760000).
+
 ## Getting an Order Status
 You can use the `status` module to retrieve an order status:
 
 ```js
 const status = await client.orders.v1.status.get(transactionId, callbackUrl, environmentUrl);
 ```
+
+API reference documentation can be found [here](https://partner.developer.autodesk.com/contents/files/api-reference-manuals/en/pws-get-order-status-service-reference-manual.pdf?ts=1669227350000).
 
 ## Models
 
