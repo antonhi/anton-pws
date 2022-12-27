@@ -1,9 +1,6 @@
 # anton-pws
 Example NodeJS SDK for Autodesk PWS.
 
-## Installation
-Navigate to your NodeJS application in a terminal and run `npm i anton-pws@1.0.0`
-
 ## Initializing the Client
 1. Obtain your credentials from the [Partner Developer Portal](https://partner.developer.autodesk.com). This includes your:
     - consumerSecret (obtained within an app you create in the Portal)
