@@ -87,7 +87,7 @@ An `InitialProduct` has the following JSON structure ('?' denotes optional prope
 {
     "partNumber": "string",
     "partnerSubscriptionId": "string?",
-    "quantity": "number"
+    "quantity": 2
 }
 ```
 

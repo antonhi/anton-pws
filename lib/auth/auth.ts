@@ -9,10 +9,7 @@ export function Auth(consumerKey: string, consumerSecret: string, csn: string) {
 
     async function getHeader(callbackUrl: string, environmentUrl: string) : Promise<AxiosRequestConfig> {
         if (!state.get(callbackUrl+environmentUrl) || getMinutesElapsed(state.get(callbackUrl+environmentUrl)?.timestamp || 0) >= 15) {
-            console.log('refreshed');
             await refresh(callbackUrl, environmentUrl);
-        } else {
-            console.log('using existing');
         }
         return {
             headers: {

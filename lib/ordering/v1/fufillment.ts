@@ -52,7 +52,6 @@ export function Fulfillment(auth: AuthService) {
     }
 
     async function getLineItems(items : Array<InitialProduct>, startDate: string, callbackUrl: string, environmentUrl: string) {
-        console.log('Getting line items');
         const lineItems = [];
         for (let item of items) {
             lineItems.push({
@@ -62,7 +61,6 @@ export function Fulfillment(auth: AuthService) {
                 netPrice: await getPrice(item.partNumber, item.quantity, startDate, callbackUrl, environmentUrl)
             });
         }
-        console.log('Line Items: ' + lineItems.toString());
         return lineItems;
     }
 
